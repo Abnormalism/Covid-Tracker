@@ -3,47 +3,44 @@ import { useState, useEffect } from "react";
 import { FaVirus } from "react-icons/fa";
 import CovidCount from "../Components/CovidCount";
 
+// Variables
+import { paragraph, imgUrl } from "../data";
+
+// Components
 import SocialMedia from "../Components/SocialMedia";
 import Loading from "../Components/Loading";
+import { useGlobalContext } from "../Context";
 
 const Home = () => {
-  const paragraph =
-    "Coronavirus disease (COVID-19) is an infectious disease caused by the SARS-CoV-2 virus. Most people infected with the virus will experience mild to moderate respiratory illness and recover without requiring special treatment. However, some will become seriously ill and require medical attention. Older people and those with underlying medical conditions like cardiovascular disease, diabetes, chronic respiratory disease, or cancer are more likely to develop serious illness. Anyone can get sick with COVID-19 and become seriously ill or die at any age.";
-  const imgUrl =
-    "https://images.unsplash.com/photo-1584118624012-df056829fbd0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmlydXN8ZW58MHx8MHx8&w=1000&q=80";
-  const url = "https://api.covid19api.com/summary";
+  const { whatCountry, isLoading, covidTracker } = useGlobalContext();
+
+  // useState
   const [readMore, setReadMore] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
-  const [covidTracker, setCovidTracker] = useState(null);
-  const [isloading, setIsLoading] = useState(true);
+
+  // Variables
   const screenWidth = window.innerWidth;
+
+  // onClick
   const showReadMore = () => {
     setReadMore(!readMore);
     setIsLargeScreen(!isLargeScreen);
   };
 
-  const fetchData = async () => {
-    const data = await fetch(url);
-    const response = await data.json();
-    const { Global } = response;
-    setCovidTracker(Global);
-    setIsLoading(false);
-  };
+  // Data Fetch
 
   useEffect(() => {
-    fetchData();
-
     if (screenWidth > 1000) {
       setIsLargeScreen(true);
     }
   }, []);
 
-  if (!isloading) {
+  if (!isLoading) {
     return (
       <section className="h-screen flex flex-col text-red-600 overflow-hidden">
         <nav className="h-[4rem] flex items-center p-4 justify-around text-red-600">
           <FaVirus className="text-3xl" />
-          <h1 className="text-xl font-bold">Covid-19 Global Update</h1>
+          <h1 className="text-xl font-bold">{`Covid - 19 ${whatCountry} Update`}</h1>
         </nav>
         <div className="mt-3 p-4 h-[calc(100vh-4rem)] relative">
           <div className="imgContainer absolute -z-10 bottom-32 md:translate-y-[40%] md:bottom-[50%] md:right-10">
